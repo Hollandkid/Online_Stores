@@ -1,0 +1,224 @@
+﻿@*  This nameSpaces is for the Session and App State*@
+@using OnlineStore1.Utility
+@using OnlineStore1.Models
+@using X.PagedList.Mvc.Core;
+@using Microsoft.AspNetCore.Identity 
+@using Microsoft.AspNetCore.Http
+
+@inject SignInManager<ApplicationUser> signInManager
+@inject UserManager<ApplicationUser> userManager
+@inject IHttpContextAccessor HttpContextAccessor
+@*      This is to Used for the App State and Session in this Part*@
+@{
+
+    int count = 0;  //This is to Count the Number of Items that was add to the Cart
+
+    List<ProductModel> productModels = HttpContextAccessor.HttpContext.Session.Get<List<ProductModel>>("productModel");
+    if (productModels == null)
+    {
+        productModels = new List<ProductModel>();
+    }
+
+    count = productModels.Count();  //This is to set the Number of product that was Added
+    var categories = (List<ProductTypes>)ViewData["categories"];
+    if (categories == null)
+    {
+        categories = new List<ProductTypes>();
+    }
+}
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />    @*This is for the Reponsiveness*@
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/AlertifyJS/css/alertify.min.css" rel="stylesheet" />  <!--    This is for the Alert dialog -->
+
+    <title>@ViewData["Title"] - OnlineStore</title>
+    <link href="~/css/SiteSheet.css" rel="stylesheet" />
+    @*Add the Link of google Fonts*@
+    @*Add the Link of Font Awesome*@
+
+</head>
+
+<body>
+    <div class="header">
+
+        <div class="container">
+
+            <div class="navbar">
+                <div class="logo">
+                    <a class="navbar-brand text-white" asp-area="Customer" asp-controller="Home" asp-action="Index"><i class="fas fa-dolly"></i> OnlineStore</a>
+                </div>
+                <nav>
+                    <ul id="Menu-item">
+                        @*Make it responsive*@
+                        <li>
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+
+                        @foreach (var category in categories)
+                        {
+                            string cat = category.ProductType;
+                            <li>
+                                <a asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Category="@cat">  @cat  </a>
+                            </li>
+                        }
+                        @{
+                            string userEmail = User.Identity.Name ?? "user@user.com";
+                            var user = await userManager.FindByEmailAsync(userEmail) ?? new ApplicationUser();
+                        }
+                        @if (signInManager.IsSignedIn(User) && await userManager.IsInRoleAsync(user, "User"))
+                        {
+                            <li style="background-color: #ff523b; border-radius: 50%; padding: 5px;">
+                                <div class="dropdown">
+                                    <span style="color:white;">@userEmail.ToString().First()<i class="fa fa-caret-down" aria-hidden="true"></i></span>
+                                    <div class="dropdown-content">
+                                        <p style="font-size:12px;">@userEmail.ToString()</p>
+                                        <hr />
+                                        <a asp-action="index" asp-controller="user" asp-area="Customer" asp-route-email="@userEmail"><p>View Profile</p></a>
+                                        <a asp-action="Logout" asp-controller="user" asp-area="Customer"><p>Logout</p></a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-area="Customer" asp-controller="User" asp-action="Login">Login</a>
+                            </li>
+                        }
+
+                    </ul>
+                </nav>
+
+                <a style="color: red; margin-top: 13px;" asp-area="Customer" asp-controller="Home" asp-action="Cart"><i class="fas fa-shopping-cart"></i>(@count)</a>
+
+                <img src="~/brands/nav.jpg" class="menu-icon" onclick="menutoggle()" /> @*This is for the Menu... Replace with a Menu image*@
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="container1">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+
+    @*------ Brands ------------*@
+    <div class="brands">
+
+        <div class="small-container">
+            <div class="row">
+                <div class="col-5">
+                    <a target="_blank" href="https://www.acer.com"><img src="~/brands/acer.jpg" /></a>
+                </div>
+
+                <div class="col-5">
+                    <a target="_blank" href="https://www.Microsoft.com"><img src="~/brands/mic.jpg" /></a>
+                </div>
+                <div class="col-5">
+                    <a target="_blank" href="https://www.hp.com"><img src="~/brands/hp.png" /></a>
+                </div>
+                <div class="col-5">
+                    <a target="_blank" href="https://www.apple.com"><img src="~/brands/apple.jpg" /></a>
+                </div>
+                <div class="col-5">
+                    <a target="_blank" href="https://www.Samsung.com"><img src="~/brands/sam.png" /></a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    @*------ Footer ------------*@
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+
+                <div class="footer-col-1">
+                    <h3>Download our App</h3>
+                    <p>Download App for Android and ios mobile phone.</p>
+                    <div style="font-size: 100px;" class="app-logo">
+                        <a target="_blank" asp-action="Nullz" asp-controller="Order"><i class="fab fa-android"></i></a>
+                        <a target="_blank" asp-action="Nullz" asp-controller="Order"><i class="fab fa-apple"></i></a>
+
+                        @*<img src="~/brands/and.png" />
+                            <img src="~/brands/ios.jpg" />*@
+                    </div>
+                </div>
+
+                <div class="footer-col-2">
+                    <div style="font-size: 150px; color:white;">
+                        <i class="fas fa-dolly"></i>
+                    </div>
+                    <p>Our purpose is to make Quaility Eletronic gadget Accessible from anywhere.</p>
+                </div>
+
+                <div class="footer-col-3">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li class="lia"><a target="_blank" asp-action="Nullz" asp-controller="Order">Coupons</a></li>
+                        <li class="lia"><a target="_blank" asp-action="Nullz" asp-controller="Order">Blog Post</a></li>
+                        <li class="lia"><a target="_blank" asp-action="Nullz" asp-controller="Order">Return Policy</a></li>
+                        <li class="lia"><a target="_blank" asp-action="Nullz" asp-controller="Order">Join Affiliate</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col-3">
+                    <h3>Follows us @@</h3>
+                    <ul>
+                        <li class="lia"><a target="_blank" href="https://www.facebook.com">Facebook</a></li>
+                        <li class="lia"><a target="_blank" href="https://www.twitter.com">Twitter</a></li>
+                        <li class="lia"><a target="_blank" href="https://www.instagram.com">Instagram</a></li>
+                        <li class="lia"><a target="_blank" href="https://www.youtube.com">YouTube</a></li>
+
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr />
+            <p class="copyright">Coypright 2021 - Online Store</p>
+        </div>
+    </div>
+
+
+    @*------ JS Toggle Menu --------*@  @*This is to Make the Menu Responsive*@
+    <script>
+        var MenuItems = document.getElementById("Menu-item");
+        MenuItems.style.maxHeight = "0px";
+
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+
+            } else {
+                MenuItems.style.maxHeight = "0px";
+
+            }
+        }
+
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+﻿@using OnlineStore1.Models;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Mvc;
+@using System.Globalization;
+@using OnlineStore1.ViewModels;
+@*@model List<ProductModel>*@
+
+@*This was used because i am using PagedList... it Enable us to use PagedList as a Model here*@
+@model ProductViewModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Home Page";
+    ViewData["categories"] = Model.ProductTypes;
+
+    var formatter = new System.Globalization.CultureInfo("HA-LATN-NG");
+    formatter.NumberFormat.CurrencySymbol = "₦";
+
+}
+
+<div class="header">
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-2">
+                <h1>Get your Cool <br /> Mobile Phones! </h1>
+                <p>It not just about buying and using a phone, <br />The quality of the Phone matters</p>
+
+                <a asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Category="Mobile Phones" class="btn">Explore Now &#8594;</a>
+            </div>
+            <div class="col-2">
+                <img src="~/Images/7.jpg" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<div class="small-container">
+    <div class="row">
+        @foreach (var product in Model.Products)
+        {
+
+            <div class="col-4">
+                <img src="~/@product.Image" alt="@product.Name" />
+                <h4 style="font-size: 19px; color: #ff523b">@product.Name</h4>
+                <div class="rating" style="color: black !important;">
+                    <p>@product.Description</p>
+                </div>
+                <p> <strong>@product.Price.ToString("C3", formatter)</strong> </p>
+               <p>
+                        <a asp-action="Details" asp-controller="Home" asp-route-Id="@product.Id" class="btn">
+                            Details
+                        </a>
+                    </p>
+                   
+            </div>
+
+        }
+    </div>
+
+    @*  This is to Use the Page number in your Page*@
+    <div class="text-page">
+
+        @{
+
+            <p>
+                Page @(Model.Products.PageCount < Model.Products.PageNumber ? 0 : Model.Products.PageNumber) of @Model.Products.PageCount
+            </p>
+            <p>
+                @Html.PagedListPager(Model.Products, c => Href("~/Customer/Home/Index?page=" + c), X.PagedList.Web.Common.PagedListRenderOptions.PageNumbersOnly)
+            </p>
+
+            //Html.PagedListPager(Model.Products, page => Url.Action("Index" + page, X.PagedList.Web.Common.PagedListRenderOptions.PageNumbersOnly))
+
+        }
+
+    </div>
+
+    <div class="testimonial">
+        <h2 class="title">Quaility Product</h2>
+
+        <div class="row">
+
+            @foreach (var product in Model.Products.OrderByDescending(c => c.Price).Take(6))
+            {
+                <div class="col-4">
+                    <img src="~/@product.Image" alt="@product.Name" />
+                    <h4 style="font-size: 19px; color: #ff523b">@product.Name</h4>
+                    <div class="rating" style="color: black !important;">
+                        <p>@product.Description</p>
+                    </div>
+                    <p> <strong>@product.Price.ToString("C3", formatter)</strong> </p>
+                    <p>
+                        <a asp-action="Details" asp-controller="Home" asp-route-Id="@product.Id" class="btn">
+                            Details
+                        </a>
+                        
+                    </p>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+@*------ Offers ------------*@
+<div class="offer">
+
+    <div class="small-container">
+
+        <div class="row">
+
+            <div class="col-2">
+                <img src="~/Images/l30.jpg" class="offer-img" />
+            </div>
+            <div class="col-2">
+                <p>Available @@ Online Stores</p>
+                <h1>Acer Nitro 5</h1>
+                <small>Gaming Intel Core I5-9300H 8GB RAM(Ugradable To 32GB)4GB NVIDIA GeForce 256 SSD WINS 10.</small>
+                <br /><a asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Category="Computers" class="btn">  Buy Now &#8594;</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="small-container">
+
+    <div class="testimonial">
+        <h2 class="title">Lastest Product</h2>
+
+        <div class="row">
+
+            @foreach (var product in Model.Products.OrderByDescending(c => c.TagTypes.SpecialTag).Take(6))
+            {
+                <div class="col-4">
+                    <img src="~/@product.Image" alt="@product.Name" />
+                    <h4 style="font-size: 19px; color: #ff523b">@product.Name</h4>
+                    <div class="rating" style="color: black !important;">
+                        <p>@product.Description</p>
+                    </div>
+                    <p> <strong>@product.Price.ToString("C3", formatter)</strong> </p>
+                    <p>
+                        <a asp-action="Details" asp-controller="Home" asp-route-Id="@product.Id" class="btn">
+                            Details
+                        </a>
+                    </p>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+
+

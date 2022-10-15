@@ -1,0 +1,136 @@
+﻿@using OnlineStore1.Models
+@model IEnumerable<OrderModel>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h3 class="text-info">Orders</h3>
+        </div>
+        <div class="col-6 text-right">
+            @*<a asp-action="Create" class="btn btn-info">Add New Product</a>*@
+
+        </div>
+    </div>
+    <br />
+
+
+</div>
+
+
+<div class="container">
+
+
+    @*  This is for Searfching between a Range*@
+    @*<form asp-action="Index" method="post">
+            <div class="row">
+                <div class="col-3">
+                    <label> Price From:</label>
+                    <input type="number" name="lowAmount" class="form-control" />
+
+                </div>
+                <div class="col-3">
+                    <label> Price To:</label>
+                    <input type="number" name="highAmount" class="form-control" />
+                </div>
+                <div class="col-3">
+                    <br />
+                    <input type="submit" value="Search" class="btn btn-outline-success" />
+
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <br />
+        </form>*@
+
+    <table class="table table-striped border" id="myTable">
+        @*The Id was use to call the DataTable function*@
+
+        <thead>
+            <!--This is used so as to use DataTable Features  ***Remember the Id in the Table Tag-->
+            <tr class="table-info">
+                <th>
+                    @Html.DisplayNameFor(c => c.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.OrderNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.PhoneNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.OrderDate)
+                </th>
+
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @*This is also usedfor the DataTable*@
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.OrderNo</td>
+                <td>@item.Name</td>
+                <td>@item.Amount</td>
+                <td>@item.Email</td>
+                <td>@item.PhoneNo</td>
+                <td>@item.Address</td>
+                <td>@item.OrderDate</td>
+                <td style="width:170px">
+                    <div class="btn-group">
+                        <a asp-action="Nullz" asp-controller="Order" asp-route-id="@Model" class="btn btn-primary"> Process Order...</a>
+                        <a asp-action="Nullz"asp-controller="Order"  asp-route-id="@Model" class="btn btn-success">Details </a>
+                    </div>
+                </td>
+                
+            </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+@section Scripts{
+
+    <!--    This to Use a JavaScript Function... The function is for the alert Notification-->
+
+    <script src="~/lib/AlertifyJS/alertify.min.js"></script>    <!--    This is for the Alert dialog -->
+    <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+
+    /* This is for the DataTable */
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+
+        /* This is for the Alerts... Alertify */
+        $(function () {
+            var save = '@TempData["save"]'
+
+            if (save != '') {
+                alertify.success(save);
+            }
+        })
+    </script>
+}

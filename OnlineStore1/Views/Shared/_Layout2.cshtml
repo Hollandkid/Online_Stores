@@ -1,0 +1,154 @@
+﻿@*  This nameSpaces is for the Session and App State*@
+@using OnlineStore1.Utility
+@using OnlineStore1.Models
+@using X.PagedList.Mvc.Core;
+
+
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@*      This is to Used for the App State and Session in this Part*@
+@{
+
+    int count = 0;  //This is to Count the Number of Items that was add to the Cart
+
+    List<ProductModel> productModels = HttpContextAccessor.HttpContext.Session.Get<List<ProductModel>>("productModel");
+    if (productModels == null)
+    {
+        productModels = new List<ProductModel>();
+    }
+
+    count = productModels.Count();  //This is to set the Number of product that was Added
+    var categories = (List<ProductTypes>)ViewData["categories"];
+    if (categories == null)
+    {
+        categories = new List<ProductTypes>();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OnlineStore</title>
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/AlertifyJS/css/alertify.min.css" rel="stylesheet" />  <!--    This is for the Alert dialog -->
+    <link href="~/css/SiteSheet.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark container-fluid">
+        <a class="navbar-brand text-white" asp-area="Customer" asp-controller="Home" asp-action="Index"><i class="fas fa-dolly"></i> OnlineStore</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="Customer" asp-controller="Order" asp-action="Nullz">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="Customer" asp-controller="Order" asp-action="Nullz">Privacy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="Customer" asp-controller="Order" asp-action="Nullz">Contact Us</a>
+            </li>
+        </ul>
+
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <ul class="form-inline my-2 my-lg-0 navbar-nav mr-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: red" asp-area="Customer" asp-controller="Home" asp-action="Cart"><i class="fas fa-shopping-cart"></i>(@count)</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Blogs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" asp-area="Customer" asp-controller="Order" asp-action="Nullz">View Blogs</a>
+                            <a class="dropdown-item" asp-area="Customer" asp-controller="Order" asp-action="Nullz">Add a post to our Blog</a>
+
+                        </div>
+                    </li>
+
+                </ul>
+                <partial name="_LoginPartial" />
+            </form>
+        </div>
+    </nav>
+    <header class="container">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-info">
+            <a class="navbar-brand text-white" asp-area="Customer" asp-controller="Home" asp-action="Index"><i class="fas fa-dolly"></i> OnlineStore</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <ul class="form-inline my-2 my-lg-0 navbar-nav mr-auto">
+                        @*<li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                            </li>*@
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+
+
+                        @foreach (var category in categories)
+                        {
+                            string cat = category.ProductType;
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Category="@cat">  @cat  </a>
+                            </li>
+                        }
+
+                        @*<li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Category="">Laptops <i class="fa fa-laptop" aria-hidden="true"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Category="Mobile Phones">Mobiles <i class="fa fa-mobile" aria-hidden="true"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">Home Appliances <i class="fas fa-house-user"></i></a>
+                            </li>*@
+
+                    </ul>
+
+                </form>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - OnlineStore1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!--     This is for the DataTable which is used for Searching and Sorting with other Operation in a Table-->
+    <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

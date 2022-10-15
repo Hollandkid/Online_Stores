@@ -1,0 +1,124 @@
+﻿@using OnlineStore1.Models
+@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h3 class="text-info">Customer Details</h3>
+        </div>
+        <div class="col-6 text-right">
+            @*<a asp-action="Create" class="btn btn-info">Add New Product</a>*@
+
+        </div>
+    </div>
+    <br />
+
+
+</div>
+
+
+<div class="container">
+
+    <table class="table table-striped border" id="myTable">
+        @*The Id was use to call the DataTable function*@
+
+        <thead>
+            <!--This is used so as to use DataTable Features  ***Remember the Id in the Table Tag-->
+            <tr class="table-info">
+                <th>
+                    @Html.DisplayNameFor(c => c.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.Address)
+                </th>
+                <th>
+                    Status
+                </th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @*This is also usedfor the DataTable*@
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.Email</td>
+                <td>@item.LastName</td>
+                <td>@item.FirstName</td>
+                <td>@item.PhoneNumber</td>
+                <td>@item.Address</td>
+
+                @if (item.LockoutEnd > DateTime.Now || item.LockoutEnd != null)
+                {
+                    <td> Inactive</td> 
+                    <td style="width:170px">
+                        <div class="btn-group">
+                            <a asp-action="Activate" asp-route-id="@item.Id" class="btn btn-danger">Activate/ Delete</a>
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td> Active</td>
+                    <td style="width:170px">
+                        <div class="btn-group">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                            <a asp-action="Disable" asp-route-id="@item.Id" class="btn btn-danger">Deactivate</a>
+                        </div>
+                    </td>
+                }
+                
+                @*<td style="width:170px">
+                    <div class="btn-group">
+                        <a asp-action="Edit" asp-route-id="@Model" class="btn btn-primary"> Disable Customer</a>
+                        <a asp-action="Details" asp-route-id="@Model" class="btn btn-success">View Details... </a>
+                    </div>
+                </td>*@
+
+            </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+@section Scripts{
+
+    <!--    This to Use a JavaScript Function... The function is for the alert Notification-->
+
+    <script src="~/lib/AlertifyJS/alertify.min.js"></script>    <!--    This is for the Alert dialog -->
+    <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+
+    /* This is for the DataTable */
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+
+        /* This is for the Alerts... Alertify */
+        $(function () {
+            var save = '@TempData["save"]'
+
+            if (save != '') {
+                alertify.success(save);
+            }
+        })
+    </script>
+}

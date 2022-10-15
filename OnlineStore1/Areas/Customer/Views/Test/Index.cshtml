@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using OnlineStore1.Utility 
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManger;
+@inject TestClass testClass;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout211.cshtml";
+
+}
+
+<h1>Index</h1>
+
+<div>
+    @if (signInManager.IsSignedIn(User))
+    {
+        <img src="~/Images/10.jpg" />
+    }
+    else
+    {
+        <img src="#" alt="image Missing" />
+    }
+
+    <img src="@Url.Action("RetriveImage", "Test", new { Id = 2, delta = DateTime.Now.Ticks })" />
+
+</div>
+

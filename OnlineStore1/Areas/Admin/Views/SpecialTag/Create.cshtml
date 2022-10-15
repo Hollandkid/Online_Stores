@@ -1,0 +1,45 @@
+﻿@model OnlineStore1.Models.SpecialTagModel
+
+@{
+    ViewData["Title"] = "Create New Brand";
+}
+
+<div class="container">
+    <h4>Create New Brand</h4>
+    <hr />
+    <form asp-action="Create" method="post">
+        <div class="p-4 rounded border">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group row">
+                <div class="col-2 ">
+                    <label asp-for="SpecialTag" class="control-label"></label>
+                </div>
+                <div class="col-5 ">
+                    <input asp-for="SpecialTag" class="form-control" />
+                </div>
+                <span asp-validation-for="SpecialTag" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="submit" value="  Save  " class="btn btn-primary" />
+                        <a asp-action="Index" asp-controller="SpecialTag" class="btn btn-success">Back to List</a>
+                    </div>
+                </div>
+                <div class="col"></div>
+
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!--    Call in the Ajax cdns for Quick Validations-->
+@section Scripts{
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+}
+

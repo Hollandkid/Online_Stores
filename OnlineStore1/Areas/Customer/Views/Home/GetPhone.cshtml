@@ -1,0 +1,50 @@
+﻿
+@using OnlineStore1.Models;
+@using OnlineStore1.ViewModels;
+@using X.PagedList.Mvc.Core;
+@*@model List<ProductModel>
+*@
+
+@*This was used because i am using PagedList... it Enable us to use PagedList as a Model here*@
+@model ProductViewModel
+@{
+    ViewData["Title"] = "Product";
+    ViewData["categories"] = Model.ProductTypes;
+
+    var formatter = new System.Globalization.CultureInfo("HA-LATN-NG");
+    formatter.NumberFormat.CurrencySymbol = "₦";
+}
+@*<partial name="_IndexPartialView" model="@Model" />*@
+<br />
+<div class="container">
+
+<div class="row">
+    @foreach (var product in Model.Products)
+    {
+    <div class="col-4">
+        <img src="~/@product.Image" alt="@product.Name" />
+        <h4 style="font-size: 19px; color: #ff523b">@product.Name</h4>
+        <div class="rating" style="color: black !important;">
+            <p>@product.Description</p>
+        </div>
+        <p> <strong>@product.Price.ToString("C3", formatter)</strong> </p>
+        <p>
+            <a asp-action="Details" asp-controller="Home" asp-route-Id="@product.Id" class="btn">
+                Details
+            </a>
+        </p>
+    </div>
+
+    }
+</div>
+</div>
+
+
+
+@*  This is to Use the Page number in your Page*@
+<div class="p-2 m-1 text-page">
+
+    @Html.PagedListPager(Model.Products, c => Href("~/Customer/Home/Index?page=" + c), X.PagedList.Web.Common.PagedListRenderOptions.PageNumbersOnly)
+</div>
+
+

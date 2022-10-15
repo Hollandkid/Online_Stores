@@ -1,0 +1,296 @@
+﻿@*  This nameSpaces is for the Session and App State*@
+@model OnlineStore1.Models.OrderModel
+
+@using OnlineStore1.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@*      This is to Usee the App State and Session in this Part*@
+@{
+
+    List<ProductModel> productModels = HttpContextAccessor.HttpContext.Session.Get<List<ProductModel>>("productModel");
+    if (productModels == null)
+    {
+        productModels = new List<ProductModel>();
+    }
+
+    var formatter = new System.Globalization.CultureInfo("HA-LATN-NG");
+    formatter.NumberFormat.CurrencySymbol = "₦";
+}
+
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+<br />
+
+@if (productModels.Count < 1)
+{
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-5 justify-content-center">
+            <h4>No item found</h4>
+
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-5 justify-content-center">
+            <a asp-action="Index" asp-controller="Home" asp-area="Customer" class="btn btn-primary">Back Home</a>
+        </div>
+        <div class="col"></div>
+    </div>
+}
+else
+{
+
+    <div class="container">
+        <form asp-action="Checkout" method="post" enctype="multipart/form-data">
+
+            <div class="p-4 rounded border row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="col-6">
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input id="fullname" asp-for="Name" placeholder="Lastname           Firstname" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <label asp-for="PhoneNo" class="control-label"></label>
+                            <input id="phoneno" asp-for="PhoneNo" placeholder="Phone Number" type="number" class="form-control" />
+                            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input id="email" asp-for="Email" type="text" placeholder="Email Address" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input id="address" asp-for="Address" placeholder="Delivery Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <label asp-for="OrderDate" class="control-label"></label>
+                            <input id="orderdate" asp-for="OrderDate" class="form-control" type="date" />
+                            <span asp-validation-for="OrderDate" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+
+                            <form class="form-horizontal templatemo-payment-form templatemo-container" role="form" action="#" method="post">
+                                <p class="text-center">
+                                    <br><br>Please enter your payment information below.
+                                </p>
+                                <hr>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Payment Options</label>
+                                    <div class="col-sm-9">
+                                        <div class="templatemo-radio-container">
+                                            <label class="radio templatemo-no-padding-top">
+                                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                                                <img src="~/Images/visa.png" alt="visa logo">
+                                                <img src="~/Images/mastercard.png" alt="mastercard logo">
+                                                <img src="~/Images/jcb.png" alt="jcb logo">
+                                                <img src="~/Images/amex.png" alt="amex logo">
+                                            </label>
+                                        </div>
+                                        <div class="templatemo-radio-container">
+                                            <label class="radio">
+                                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                                <img src="~/Images/paypal.png" alt="paypal logo">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Credit Card</label>
+                                    <div class="col-sm-9 templatemo-card-details">
+                                        <div class="col-md-12 form-group">
+                                            <label for="card_name" class="control-label">Name on card</label>
+                                            <input type="text" class="form-control" id="card_name" placeholder="">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label for="card_number" class="control-label">Card number</label>
+                                            <input type="text" class="form-control" id="card_number" placeholder="">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label for="card_number" class="control-label">Email</label>
+                                            <input type="text" class="form-control" id="card_email" placeholder="">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <div class="templatemo-inline-group">
+                                                <label class="control-label">Expiry</label>
+                                                <div class="col-sm-12 templatemo-select-container">
+                                                    <select>
+                                                        <option>-</option>
+
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                        <option value="2024">2024</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                        <option value="2028">2028</option>
+                                                    </select> /
+                                                    <select>
+                                                        <option>-</option>
+                                                        <option value="01">01</option>
+                                                        <option value="02">02</option>
+                                                        <option value="03">03</option>
+                                                        <option value="04">04</option>
+                                                        <option value="05">05</option>
+                                                        <option value="06">06</option>
+                                                        <option value="07">07</option>
+                                                        <option value="08">08</option>
+                                                        <option value="09">09</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="templatemo-inline-group cvv2-group">
+                                                <div>
+                                                    <label for="cvv2" class="control-label text-left">Security Code</label>
+                                                    <input type="text" maxlength="3" class="cvv2 form-control" id="cvv2" placeholder="">
+                                                    <img src="~/Images/cvv2.jpg" alt="cvv2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <!--<div class="form-group">-->
+                    @*<a asp-action="Edit" class="btn btn-primary" asp-route-Id="@Model.Id">Edit Product</a>*@
+                    <!--<a asp-action="Index" asp-controller="Home" asp-area="Customer" class="btn btn-success">Back to List</a>
+                    </div>-->
+                </div>
+
+                <div class="col-6">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in productModels)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="~/@item.Image" alt="@item.Name" width="130px" height="100px" />
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Price.ToString("C3", formatter)</td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                    <div class="text-right">
+                        <input type="hidden" hidden disabled id="tAmount" name="name" value="@productModels.Sum(c => c.Price).ToString()" />
+                        <h4>Total Price: @productModels.Sum(c => c.Price).ToString("C3", formatter)</h4>
+                    </div>
+                    <div class="form-group text-right">
+                        @*<input id="pOrderbtn" onclick="makePayment()" type="submit" value="  Place Order  " class="btn" />*@
+                        <a id="pOrderbtn" class="btn" onclick="makePayment()">  Place Order  </a>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+}
+
+<!--    Call in the Ajax cdns for Quick Validations-->
+@section Scripts{
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+    <script>
+        //const uFName = $('#fullame').val();
+        //const uPhoneNo = $('#phoneno').val();
+        //const uEmail = $('#email').val();
+        //const uAddress = $('#address').val();
+        //const tOrderDate = $('#orderdate').val();
+        //const tAmount = $('#tAmount').val();
+
+
+
+        function makePayment() {
+            var uFName = document.getElementById('fullname').value;
+            var uPhoneNo = document.getElementById('phoneno').value;
+            var uEmail = document.getElementById('email').value;
+            var uAddress = document.getElementById('address').value;
+            var tOrderDate = document.getElementById('orderdate').value;
+            var tAmount = document.getElementById('tAmount').value;
+            var card_name = document.getElementById('card_name').value;
+            var card_email = document.getElementById('card_email').value;
+            var card_phone = document.getElementById('card_number').value;
+
+
+            console.log(`${uEmail} ${tAmount} ${uPhoneNo} ${uFName}`)
+
+            if (uEmail == card_email && uFName == card_name) {
+                FlutterwaveCheckout({
+                    public_key: "FLWPUBK_TEST-6d0525e7bacb8cf610269a9db10d0f9e-X",
+                    tx_ref: "titanic-48981487343MDI0NzMx",
+                    amount: tAmount,
+                    currency: "NGN",
+                    payment_options: "card",
+                    redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+                    meta: {
+                        consumer_id: 23,
+                        consumer_mac: "92a3-912ba-1192a",
+                    },
+                    customer: {
+                        email: uEmail,
+                        phone_number: uPhoneNo,
+                        name: `${uFName}`,
+                    },
+                    customizations: {
+                        title: "Online Store",
+                        description: "Payment for Product",
+                        logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+                    },
+                });
+            } else {
+                alert("Authetication Failed can not Use this card for Payment.")
+            }
+
+            
+        }
+
+
+    </script>
+}

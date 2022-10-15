@@ -1,0 +1,86 @@
+﻿@model OnlineStore1.ViewModels.AllProductViewModel
+@*  This nameSpaces is for the Session and App State*@
+
+@using OnlineStore1.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@*      This is to Usee the App State and Session in this Part*@
+@{
+    ViewData["Title"] = "Product Details";
+
+    List<ProductModel> productModels = HttpContextAccessor.HttpContext.Session.Get<List<ProductModel>>("productModel");
+    ProductModel product = null;
+    if (productModels != null)
+    {
+        product = productModels.FirstOrDefault(c => c.Id == Model.Product.Id);
+    }
+
+
+    var formatter = new System.Globalization.CultureInfo("HA-LATN-NG");
+    formatter.NumberFormat.CurrencySymbol = "₦";
+
+}
+
+<div class="small-container">
+    <p>@Model.Product.productTypes.ProductType / @Model.Product.TagTypes.SpecialTag</p>
+    <div class="row">
+        <div class="col-2">
+            <img src="~/@Model.Product.Image" width="70%" id="ProductImg" />
+
+        </div>
+        <div class="col-2">
+            <h2>@Model.Product.Name</h2>
+            <h4 style="color:black">@Model.Product.Price.ToString("C3", formatter)</h4>
+
+            <p style="color:black">@Model.Product.Description</p>
+
+            <form asp-action="Details" method="post" enctype="multipart/form-data">
+                <input type="submit" value="Add to Cart" class="btn" />
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="small-container">
+    <div class="row row-2">
+        <h2 class="tit">Related Products</h2>
+
+        <p>
+            <a asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Brand="@Model.Product.TagTypes.SpecialTag">View more</a>
+        </p>
+        @*<a asp-area="Customer" asp-controller="Home" asp-action="GetPhone" asp-route-Category="@cat">  @cat  </a>*@
+
+    </div>
+</div>
+<div class="small-container">
+    @*<h2 class="title">Quaility Product</h2>*@
+
+    <div class="row">
+
+        @foreach (var relatedProduct in Model.Products.Where(c => c.TagTypes.SpecialTag == Model.Product.TagTypes.SpecialTag).Take(12))
+        {
+            <div class="col-4">
+                <img src="~/@relatedProduct.Image" alt="@relatedProduct.Name" />
+                <h4 style="font-size: 19px; color: #ff523b">@relatedProduct.Name</h4>
+                <div class="rating" style="color: black !important;">
+                    <p>@relatedProduct.Description</p>
+                </div>
+                <p> <strong>@relatedProduct.Price.ToString("C3", formatter)</strong> </p>
+                <p>
+                    <a asp-action="Details" asp-controller="Home" asp-route-Id="@relatedProduct.Id" class="btn">
+                        Details
+                    </a>
+
+                </p>
+            </div>
+        }
+
+    </div>
+</div>
+<!--    Call in the Ajax cdns for Quick Validations-->
+@section Scripts{
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

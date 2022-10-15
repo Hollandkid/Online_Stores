@@ -1,0 +1,58 @@
+﻿@using OnlineStore1.Models
+@model IEnumerable<ProductTypes>
+@{
+    ViewData["Title"] = "Category";
+}
+
+
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h3 class="text-info">Categories</h3>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-action="Create" class="btn btn-info"> New Category</a>
+
+        </div>
+    </div>
+    <br />
+
+
+</div>
+<div>
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th>
+                @Html.DisplayNameFor(c => c.ProductType)
+            </th>
+            <td></td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductType</td>
+                <td><partial name="_buttonPartialView" model="@item.Id" /></td>
+            </tr>
+        }
+
+    </table>
+</div>
+@section Scripts{
+
+    <!--    This to Use a JavaScript Function... The function is for the alert Notification-->
+
+    <script src="~/lib/AlertifyJS/alertify.min.js"></script>    <!--    This is for the Alert dialog -->
+    
+
+    <script type="text/javascript">
+        $(function () {
+            var save = '@TempData["save"]'
+
+            if (save != '') {
+                alertify.success(save);
+            }
+        })
+    </script>
+}
